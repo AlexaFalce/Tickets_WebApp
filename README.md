@@ -8,15 +8,16 @@ There is only one default user with administrator role (username: admin; passwor
 
 ## Application content
 
-- Homepage: page accessible to everyone where you can see all existing itckets in the application.
-- Create ticket: page accessible only to logged in users where you can create a ticket by specifying title, assigneee, due dates, type, estimated time, description and attachment (optional).
-- Details ticket: page accessible to all where you can see all ticket details. If user is logged in he can add the ticket to his pesronal list of observed tickets.
-- Edit ticket: page accessible only to admin user where you can edit a ticket by specifying title, assigneee, due dates, type, status, estimated time, description and attachment (optional).
-- Watches: page accessible only to logged in users where you can see the tickets that the logged in user has added to their list of watched tickets.
-- Watchers: page ccessible only to admin user where you can see all users who are watching that particular ticket.
-- Board: page accessible to logged in users where you can see a summary of tickets. Only user specified as "assignee" can edit time spent.
-- search: search bar that allows you to search for a ticket by title, desctiption, or username.
-- login/logout: pages that allow a user to register and log into the application.
+- Homepage: page accessible to everyone. You can see all existing tickets in the application.
+- Create ticket: page accessible only to logged in users. You can create a ticket.
+- Details ticket: page accessible to everyone. You can see all ticket details. If user is logged in, he can add the ticket to list of observed tickets.
+- Edit ticket: page accessible only to admin user. You can edit a ticket.
+- Watches: page accessible only to logged in users. You can see the tickets that the logged in user has added to his list of observed tickets.
+- Watchers: page accessible only to admin user. You can see all users who are watching that ticket.
+- Board: page accessible to logged in users. You can see a summary of tickets. Only user specified as "assignee" can edit time spent.
+- Login/Logout: pages that allow a user to register and log into the application.
+- Search bar: it allows you to search for a ticket by title, description or username.
+
 
 
 
