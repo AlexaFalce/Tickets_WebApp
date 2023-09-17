@@ -3,9 +3,6 @@
 mvnw
 mvnw.cmd
 
-# Property
-application.properties
-
 # Target
 target/
 !.mvn/wrapper/maven-wrapper.jar
