@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{master :: layout(~{::title},~{::meta},~{::main})}">
+<head>
+    <title>Tickets - Details</title>
+    <meta name="description" content="show details of the ticket">
+</head>
+
+<body>
+<main>
+
+    <!-- page title -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Details ticket</h1>
+    </div>
+
+    <!-- error message -->
+    <div>
+        <p class="text-danger" th:if="${!success}">Cannot remove this ticket: someone is watching it</p>
+    </div>
+
+    <!-- ticket details -->
+    <div class="card border-primary">
+
+        <!-- ticket header -->
+        <div class="card-header text-center">
+            <div class="row">
+                <div class="col-md-11">
+                    <h3 class="mt-2" th:text="${ticket.title}"></h3>
+                </div>
+                <div class="col-md-1" sec:authorize="isAuthenticated()">
+                    <a class="btn mt-2" id="watch-button" th:onclick="'addOrRemoveToWatchedTickets(' + ${ticket.id} + ')'">Watch</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ticket body -->
+        <div class="card-body" style="min-height: 20rem;">
+            <div class="row">
+                <p><strong>Ticket ID:</strong> <span th:text="${ticket.id}"></span></p>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <p><strong>Author:</strong> <span th:text="${ticket.author.username}"></span></p>
+                    <p><strong>Assignee:</strong> <span th:text="${ticket.assignee}"></span></p>
+                </div>
+                <div class="col-md-5">
+                    <p><strong>Status:</strong> <span th:text="${ticket.status}"></span></p>
+                    <p><strong>Date:</strong> <span th:text="${ticket.date}"></span></p>
+                    <p><strong>Due date:</strong> <span th:text="${ticket.due_date}"></span></p>
+                </div>
+                <div class="col-md-3">
+                    <p><strong>Type:</strong> <span th:text="${ticket.type}"></span></p>
+                    <p><strong>Estimate:</strong> <span th:text="${ticket.estimate}"></span></p>
+                    <p><strong>Time spent:</strong> <span th:text="${ticket.time_spent}"></span></p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <h6><strong>Description</strong></h6>
+                <p th:text="${ticket.description}"></p>
+            </div>
+            <div class="row mt-4">
+                <h6 class="card-text"><strong>Attachment</strong></h6>
+                <p th:if="${ticket.attachment == null}">There's no attachment for this ticket</p>
+                <p th:if="${ticket.attachment != null}"><a th:href="@{'/ticket/'+${ticket.id}+'/attachment'}" target="_blank" th:text="${ticket.attachment.name}"></a> [<span th:text="${ticket.attachment.readeableSize}"></span>]</p>
+            </div>
+        </div>
+
+        <!-- ticket footer -->
+        <div class="card-footer" sec:authorize="hasRole('ADMIN')">
+            <a class="btn btn-outline-primary float-end me-2 col-1" th:href="@{'/ticket/'+${ticket.id}+'/delete'}">Delete</a>
+            <a class="btn btn-outline-primary float-end me-2 col-1" th:href="@{'/ticket/'+${ticket.id}+'/edit'}">Edit</a>
+            <a class="btn btn-outline-primary float-end me-2 col-1" th:href="@{'/ticket/'+${ticket.id}+'/watchers'}">Watchers</a>
+        </div>
+
+    </div>
+
+    <!-- update style button watch -->
+    <script>
+        fetch("ticket/"+[[${ticket.id}]]+"/is-watched")
+            .then(response => {
+                if (response.status === 200)
+                    return response.json();
+            })
+            .then(data => {
+                watchButton.innerHTML = "";
+                if (data === true) {
+                    watchButton.classList.remove("btn-outline-primary");
+                    watchButton.classList.add("btn-primary");
+                    watchButton.innerHTML = iconEye + watchButton.innerHTML;
+                } else {
+                    watchButton.classList.remove("btn-primary");
+                    watchButton.classList.add("btn-outline-primary");
+                    watchButton.innerHTML = iconEyeBar + watchButton.innerHTML;
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    </script>
+
+</main>
+</body>
+</html>

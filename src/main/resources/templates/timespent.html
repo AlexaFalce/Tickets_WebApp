@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{master :: layout(~{::title},~{::meta},~{::main})}">
+<head>
+    <title>Tickets - Time spent</title>
+    <meta name="description" content="Edit ticket time spent">
+</head>
+
+<body>
+<main>
+
+    <!-- page title -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Edit time spent</h1>
+    </div>
+
+    <form method="post" th:object="${ticket}">
+
+        <!-- ticket details -->
+        <div class="card border-primary">
+
+            <!-- ticket header -->
+            <div class="card-header text-center">
+                <div class="row">
+                    <div class="col-md-11">
+                        <h3 class="mt-2" th:text="${ticket.title}"></h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ticket body -->
+            <div class="card-body" style="min-height: 20rem;">
+                <div class="row">
+                    <p><strong>Ticket ID:</strong> <span th:text="${ticket.id}"></span></p>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <p><strong>Author:</strong> <span th:text="${ticket.author.username}"></span></p>
+                        <p><strong>Assignee:</strong> <span th:text="${ticket.assignee}"></span></p>
+                    </div>
+                    <div class="col-md-5">
+                        <p><strong>Status:</strong> <span th:text="${ticket.status}"></span></p>
+                        <p><strong>Date:</strong> <span th:text="${ticket.date}"></span></p>
+                        <p><strong>Due date:</strong> <span th:text="${ticket.due_date}"></span></p>
+                    </div>
+                    <div class="col-md-3">
+                        <p><strong>Type:</strong> <span th:text="${ticket.type}"></span></p>
+                        <p><strong>Estimate:</strong> <span th:text="${ticket.estimate}"></span></p>
+                        <!-- time spent -->
+                        <label class="me-2"><strong>Time spent</strong>
+                            <input class="form-control" type="number" min="0" step="0.1" th:field="*{time_spent}"/>
+                        </label>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <h6><strong>Description</strong></h6>
+                    <p th:text="${ticket.description}"></p>
+                </div>
+                <div class="row mt-4">
+                    <h6 class="card-text"><strong>Attachment</strong></h6>
+                    <p th:if="${ticket.attachment == null}">There's no attachment for this ticket</p>
+                    <p th:if="${ticket.attachment != null}"><a th:href="@{'/ticket/'+${ticket.id}+'/attachment'}" target="_blank" th:text="${ticket.attachment.name}"></a> [<span th:text="${ticket.attachment.readeableSize}"></span>]</p>
+                </div>
+            </div>
+
+            <!-- ticket footer -->
+            <div class="card-footer" >
+                <a class="btn btn-outline-secondary float-end me-2 col-1" th:href="@{/}">Cancel</a>
+                <button class="btn btn-outline-primary float-end me-2 col-1" type="submit">Save</button>
+            </div>
+        </div>
+
+    </form>
+
+</main>
+</body>
+</html>

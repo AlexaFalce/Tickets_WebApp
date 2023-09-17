@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{master :: layout(~{::title},~{::meta},~{::main})}">
+<head>
+    <title>Tickets - Board</title>
+    <meta name="description" content="edit ticket">
+</head>
+
+<body>
+<main>
+
+    <div class="container-fluid">
+        <div class="row mt-4">
+
+            <!-- columns status -->
+            <div class="col-md-3" th:each="status : ${T(ch.supsi.webapp.web.model.Status).values()}" th:if="${status != T(ch.supsi.webapp.web.model.Status).CLOSED}">
+                <div class="card flex" style="height: 83vh;">
+
+                    <!-- title column -->
+                    <div class="card-header text-center" th:text="${status}"></div>
+                    <div class="card-body" style="height: 35rem; overflow-y: auto;">
+                        <div th:each="ticket : ${tickets}" th:if="${ticket.status.toString() == status.toString()}">
+
+                            <!-- ticket -->
+                            <div class="card mb-3 border-primary clickable-card" th:data-ticket-id="${ticket.id}" th:onclick="'loadTicketDetails(' + ${ticket.id} + ')' ">
+
+                                <!-- ticket header -->
+                                <div class="card-body">
+                                    <h5 class="mb-0 truncated-title-card text-center" th:text="${ticket.title}"></h5>
+                                    <hr>
+                                    <p class="mt-2 fw-bold">Assignee: <span class="fw-normal" th:text="${ticket.assignee}"></span></p>
+                                    <p class="mt-2 fw-bold">Type: <span class="fw-normal" th:text="${ticket.type}"></span></p>
+                                </div>
+
+                                <!-- ticket footer -->
+                                <div class="card-footer bg-transparent" th:if="${#authentication.principal.username}==${ticket.assignee}">
+                                    <a class="btn btn-outline-primary btn-sm float-end me-2 " th:href="@{'/ticket/'+${ticket.id}+'/time-spent'}">Set time spent</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- columns details and card selected -->
+            <div class="col-md-3">
+
+                <!-- columns summary details -->
+                <div class="card flex" style="height: 55vh;">
+
+                    <!-- title column -->
+                    <div class="card-header text-center">
+                        Status details
+                    </div>
+                    <div class="card-body" style="overflow-y: auto;">
+
+                        <!-- status details -->
+                        <div th:each="item : ${statusDetails}">
+                            <p class="mb-1" th:text="${item.key}+': '+ ${item.value}"></p>
+                        </div>
+                        <hr>
+
+                        <!-- ticket details -->
+                        <div th:each="ticket : ${ticketDetails}">
+                            <div th:if="${ticket.status.toString() != T(ch.supsi.webapp.web.model.Status).CLOSED.toString()}">
+                                <p class="truncated-title mb-1" th:text="${ticket.title}"></p>
+                                <div th:with="progressValue=${(ticket.time_spent / ticket.estimate) * 100}">
+                                    <div class="progress">
+                                        <div class="progress-bar " role="progressbar"
+                                             th:style="'width: ' + ${progressValue} + '%'"
+                                             th:aria-valuenow="${progressValue}" th:aria-valuemin="0"
+                                             th:aria-valuemax="100">
+                                            <span th:text="${#numbers.formatDecimal(progressValue, 1, 2) + ' %'}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- card selected -->
+                <div id="details-ticket"> </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- show details of th ticket clicked-->
+    <script type="text/javascript" th:src="@{/js/showDetails.js}"></script>
+
+    <!-- truncate title if it has more than 15 or 25 characters -->
+    <script>
+        let title15 = document.querySelector('.truncated-title-card');
+        let title25 = document.querySelector('.truncated-title');
+
+        if (title15) {
+            let maxLength = 15;
+            const titleText = title15.textContent;
+            title15.textContent = titleText.length > maxLength ? titleText.substring(0, maxLength) + '...' : titleText;
+        }
+
+        if (title25) {
+            let maxLength = 25;
+            const titleText = title25.textContent;
+            title25.textContent = titleText.length > maxLength ? titleText.substring(0, maxLength) + '...' : titleText;
+        }
+    </script>
+</main>
+
+</body>
+</html>

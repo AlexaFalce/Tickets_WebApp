@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{master :: layout(~{::title},~{::meta},~{::main})}">
+<head>
+    <title>Tickets - Watched tickets</title>
+    <meta name="description" content="Tickets watched by the user">
+</head>
+
+<body>
+<main>
+
+    <!-- page title -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Watched Tickets</h1>
+    </div>
+
+    <!-- if there is no ticket to show -->
+    <div th:if="${#lists.isEmpty(watchedTickets)}">
+        <p class="fs-4">There's no ticket.</p>
+    </div>
+
+    <!-- tickets table -->
+    <div class="card-group row-cols-1 row-cols-md-4 g-4">
+        <div th:each="ticket : ${watchedTickets}">
+
+            <!-- single ticket -->
+            <div class="card mb-3 border-primary" style="width: 18rem;">
+
+                <!-- ticket header -->
+                <div class="card-header">
+                    <p class="mb-0" th:text="${ticket.author.username}"></p>
+                    <small class="text-muted" th:text="${ticket.date}"></small>
+                </div>
+
+                <!-- ticket body -->
+                <div class="card-body text-center" style="height: 8rem;">
+                    <h5 class="card-title mt-3 truncated-title" th:text="${ticket.title}"></h5>
+                </div>
+
+                <!-- ticket footer  -->
+                <div class="card-footer">
+                    <a class="btn btn-outline-primary btn-sm float-end me-2 col-5" th:href="@{'/ticket/'+${ticket.id}}">more details</a>
+                    <a class="btn btn-outline-primary btn-sm float-end me-2 col-5" th:href="@{'/ticket/'+${ticket.id}+'/watchers'}" sec:authorize="hasRole('ADMIN')">Watchers</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- truncate title if it has more than 55 characters -->
+    <script>
+        let maxLength = 55;
+        let title = document.querySelector('.truncated-title');
+
+        if (title) {
+            const titleText = title.textContent;
+            title.textContent = titleText.length > maxLength ? titleText.substring(0, maxLength) + '...' : titleText;
+        }
+    </script>
+
+</main>
+</body>
+</html>

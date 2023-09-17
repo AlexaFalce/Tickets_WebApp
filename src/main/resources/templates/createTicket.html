@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{master :: layout(~{::title},~{::meta},~{::main})}">
+<head>
+    <title>Tickets - Create</title>
+    <meta name="description" content="create ticket">
+</head>
+
+<body>
+<main>
+
+    <!-- page title -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Create ticket</h1>
+    </div>
+
+    <!-- error message -->
+    <div>
+        <p class="text-danger" th:if="${!success}">All fields must be filled in</p>
+    </div>
+
+    <form method="post" th:object="${ticket}" enctype="multipart/form-data">
+
+        <!-- ticket details -->
+        <div class="card border-primary">
+
+            <!-- ticket header -->
+
+            <div class="card-header">
+                <div class="row">
+                    <h4 class="mb-0 mt-1" th:text="${#authentication.principal.username}"></h4>
+                    <h6 class="text-muted mt-1" th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></h6>
+                </div>
+            </div>
+
+            <!-- ticket body -->
+            <div class="card-body" style="min-height: 20rem;">
+
+                <!-- title -->
+                <div class="row">
+                    <label> <strong>Title</strong>
+                        <input class="form-control" type="text" th:field="*{title}">
+                    </label>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <!-- assignee -->
+                        <label class="me-2"><strong>Assignee</strong>
+                            <select class="form-select" th:field="*{assignee}">
+                                <option th:each="user : ${users}" th:value="${user.username}" th:text="${user.username}"></option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- due date -->
+                        <label> <strong>Due date</strong>
+                            <input class="form-control active" type="datetime-local" th:value="${ticket.due_date}" th:min="${currentDate}" th:field="*{due_date}"/>
+                        </label>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- type -->
+                        <label class="me-2"><strong>Type</strong>
+                            <select class="form-select" th:field="*{type}">
+                                <option th:each="type : ${T(ch.supsi.webapp.web.model.Type).values()}" th:value="${type}" th:text="${type}"></option>
+                            </select>
+                        </label>
+                        <br>
+                        <br>
+                        <!-- estimate -->
+                        <label class="me-2"><strong>Estimate</strong>
+                            <input class="form-control" type="number" min="0" step="0.1" th:field="*{estimate}"/>
+                        </label>
+                    </div>
+                </div>
+                <!-- description -->
+                <div class="row mt-4">
+                    <label> <strong>Description</strong>
+                        <textarea class="form-control" th:field="*{description}" rows="5"></textarea>
+                    </label>
+                </div>
+                <!-- attachment -->
+                <div class="row mt-4">
+                    <label> <strong>Attachment</strong>
+                        <input class="form-control" type="file" name="myfile">
+                    </label>
+                </div>
+            </div>
+
+            <!-- ticket footer -->
+            <div class="card-footer" >
+                <button class="btn btn-outline-secondary float-end me-2 col-1" type="reset">Reset</button>
+                <button class="btn btn-outline-primary float-end me-2 col-1" type="submit">Create</button>
+            </div>
+
+        </div>
+    </form>
+    <br>
+
+</main>
+</body>
+</html>
